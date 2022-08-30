@@ -38,7 +38,7 @@ const verifyTokenAndAuthorization = (req, res, next) => {
 // Allow only admin to perform some operations
 const verifyTokenAndAdmin = (req, res, next) => {
   verifyToken(req, res, () => {
-    if (req.body.isAdmin) {
+    if (req.user.isAdmin) {
       next();
     } else {
       return res.status(403).json("You are not an admin");

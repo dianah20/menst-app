@@ -1,9 +1,9 @@
 const router = require("express").Router();
 const User = require("../models/User");
-const { verifyTokenAndAuthorization } = require("./jwtoken");
+const { verifyTokenAndAuthorization, verifyToken, verifyTokenAndAdmin } = require("./jwtoken");
 
 // UPDATE USER*****************************
-router.put("/update/:id", verifyTokenAndAuthorization, async (req, res) => {
+router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
   try {
     if (req.body.password) {
       const salt = await bcrypt.genSalt(10);

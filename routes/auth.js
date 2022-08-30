@@ -2,6 +2,7 @@ const express = require("express");
 const User = require("../models/User");
 const { generateToken } = require("./jwtoken");
 const router = express.Router();
+const bcrypt = require("bcrypt")
 
 // REGISTER
 router.post("/register", async (req, res) => {
@@ -25,13 +26,14 @@ router.post("/register", async (req, res) => {
     const userEmail = await User.findOne({ email: req.body.email });
 
     if (userEmail) {
-      res.status(500).json("User already exists");
+      return res.status(500).json("User already exists");
     } else {
       const user = await newUser.save();
-      res.status(201).json(user);
+      return res.status(201).json(user);
     }
   } catch (err) {
-    res.status(500).json(err);
+    console.log(err);
+    return res.status(500).json(err);
   }
 });
 
@@ -40,7 +42,7 @@ router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
-      res.status(404).json("User doesnot exist");
+      return res.status(404).json("User doesnot exist");
     }
     const validPassword = await bcrypt.compare(
       req.body.password,
@@ -63,7 +65,7 @@ router.post("/login", async (req, res) => {
       token: generateToken(tokenPayload),
     });
   } catch (err) {
-    res.status(500).json(err);
+    return res.status(500).json(err);
   }
 });
 
